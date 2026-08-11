@@ -466,7 +466,11 @@ function renderAccount(user) {
 }
 
 function conversationTimestamp(conversation) {
-  const numeric = Number(conversation?.updatedAt || 0);
+  const numeric = Number(
+    conversation?.lastActivityAt ||
+    conversation?.updatedAt ||
+    0
+  );
 
   if (Number.isFinite(numeric) && numeric > 0) {
     return numeric;
@@ -532,7 +536,7 @@ function renderConversationList() {
 
       <div class="conversation-time">
         ${escapeHtml(
-          conversation?.timeText || formatClock(conversation?.updatedAt)
+          conversation?.timeText || formatClock(conversation?.lastActivityAt || conversation?.updatedAt)
         )}
       </div>
     `;
