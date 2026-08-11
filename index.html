@@ -1,288 +1,187 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0a0d12">
-<title>Satış Paneli</title>
-<style>
-:root{
-  color-scheme:dark;
-  --bg:#090c11;--panel:#10141b;--line:#242b36;--line2:#2c3441;
-  --text:#f5f7fb;--muted:#8792a3;--accent:#ff315b;--accent2:#d91f49;
-  --good:#54db96;--danger:#ff7892;
-}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
-button,input,textarea{font:inherit}.hidden{display:none!important}
-.authView{min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 18% 0,#38131f 0,transparent 30%),radial-gradient(circle at 90% 90%,#131d32 0,transparent 25%),var(--bg)}
-.loginCard{width:min(410px,100%);padding:28px;border:1px solid var(--line);background:rgba(15,19,27,.97);border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,.36)}
-.loginLogo{width:48px;height:48px;border-radius:14px;background:var(--accent);display:grid;place-items:center;font-size:20px;font-weight:900;margin-bottom:18px}
-.kicker{font-size:10px;font-weight:800;letter-spacing:.2em;color:#8995a8}
-.loginCard h1{font-size:29px;margin:7px 0 6px}.loginCard>p{color:var(--muted);margin:0 0 22px;line-height:1.5;font-size:13px}
-.loginCard label{display:block;font-size:11px;color:#9ba6b7;margin:11px 0 6px}
-.loginCard input,.searchWrap input,.composer textarea{width:100%;border:1px solid var(--line2);background:#0a0e14;color:white;border-radius:11px;padding:12px 13px;outline:none}
-.loginCard input:focus,.searchWrap input:focus,.composer textarea:focus{border-color:var(--accent)}
-.loginActions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
-button{border:0;border-radius:10px;padding:11px 14px;cursor:pointer;font-weight:750}
-.primary{background:var(--accent);color:white}.primary:hover,.sendButton:hover{background:var(--accent2)}
-.secondary{background:#1a212c;color:#e9eef6;border:1px solid var(--line2)}
-.formMessage{min-height:18px;margin-top:10px;font-size:12px;color:var(--danger)}
-.limitNote{margin-top:13px;padding-top:13px;border-top:1px solid #202630;color:#707c8e;font-size:11px}
-.app{height:100vh;display:grid;grid-template-columns:320px 1fr}
-.sidebar{min-width:0;background:linear-gradient(180deg,#191018 0,#10131a 46%,#0f131a 100%);border-right:1px solid var(--line);display:flex;flex-direction:column}
-.brand{display:flex;align-items:center;gap:11px;padding:14px 15px;border-bottom:1px solid #27232d}
-.brandIcon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--accent);font-weight:900}
-.brand strong{display:block;font-size:13px}.brand span{display:block;font-size:10px;margin-top:4px;color:#8c97a8}.brand span.online{color:var(--good)}
-.searchWrap{padding:12px 12px 8px}.searchWrap input{padding:11px 12px;background:#140f16;border-color:#30252f}
-.sideInfo{padding:6px 14px 10px;display:flex;justify-content:space-between;color:#7f8a9b;font-size:10px;text-transform:uppercase;letter-spacing:.09em}.sideInfo b{color:#aab4c3}
-.conversationList{flex:1;min-height:0;overflow:auto}
-.conv{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:11px 13px;border-left:3px solid transparent;border-bottom:1px solid rgba(255,255,255,.035);cursor:pointer}
-.conv:hover{background:#171923}.conv.active{background:#1c1c2b;border-left-color:var(--accent)}
-.convAvatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#252c38;color:#dbe1ea;font-size:13px;font-weight:800}
-.convMain{min-width:0}.convMain strong{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.convMain span{font-size:11px;color:#7f8999;display:block;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.convTime{font-size:10px;color:#6f7989}
-.sideEmpty{padding:50px 20px;text-align:center;color:#778294}.sideEmpty strong{display:block;color:#d9dee7;font-size:12px;margin-bottom:7px}.sideEmpty span{font-size:11px;line-height:1.5}
-.accountBar{display:flex;align-items:center;gap:9px;padding:12px;border-top:1px solid var(--line);background:#0d1117}
-.avatar{width:32px;height:32px;border-radius:9px;background:#202735;display:grid;place-items:center;font-weight:850}.accountText{min-width:0;flex:1}.accountText strong,.accountText span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.accountText strong{font-size:11px}.accountText span{font-size:9px;color:#7c8797;margin-top:3px}.iconButton{background:transparent;color:#aab4c3;padding:7px;font-size:18px}
-.main{min-width:0;background:#090c11}.emptyState{height:100%;display:grid;place-content:center;text-align:center;padding:20px}.emptyIcon{width:62px;height:62px;margin:0 auto 17px;border-radius:18px;display:grid;place-items:center;background:#121722;border:1px solid #252d39;color:var(--accent);font-size:25px}.emptyState h2{font-size:20px;margin:0 0 7px}.emptyState p{max-width:620px;margin:0;color:#8190a4;font-size:12px;line-height:1.65}
-.chat{height:100%;display:grid;grid-template-rows:auto 1fr auto}.chatHeader{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;border-bottom:1px solid var(--line);background:#0c1016}.chatHeader h2{margin:0;font-size:16px}.chatHeader span{color:#7f8a9b;font-size:10px}.chatState{font-size:10px;color:var(--good);border:1px solid #1c5e42;background:#0c2118;border-radius:999px;padding:7px 10px}
-.messageList{overflow:auto;padding:22px 24px;display:flex;flex-direction:column;gap:8px}.messageBubble{max-width:min(720px,72%);padding:10px 12px;border-radius:14px;border:1px solid #252d39;background:#151b24;white-space:pre-wrap;word-break:break-word;font-size:13px;line-height:1.45}.messageBubble.in{align-self:flex-start;border-bottom-left-radius:5px}.messageBubble.out{align-self:flex-end;background:#32131d;border-color:#572033;border-bottom-right-radius:5px}.messageBubble small{display:block;margin-top:6px;color:#717c8d;font-size:9px;text-align:right}
-.composer{display:grid;grid-template-columns:1fr auto;align-items:end;gap:10px;padding:13px 15px;border-top:1px solid var(--line);background:#0c1016}.composer textarea{margin:0;resize:none;min-height:45px;max-height:150px;line-height:1.45}.sendButton{height:45px;background:var(--accent);color:white;padding:0 20px}
-@media(max-width:800px){.app{grid-template-columns:280px 1fr}.messageBubble{max-width:84%}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0d12">
+  <meta name="color-scheme" content="dark">
+  <title>Satış Paneli</title>
+
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+  <noscript>
+    <div class="fatal-banner">Bu panelin çalışması için JavaScript açık olmalı.</div>
+  </noscript>
 
-<section id="authView" class="authView">
-  <div class="loginCard">
-    <div class="loginLogo">S</div>
-    <div class="kicker">ITEMSATIŞ EKİP PANELİ</div>
-    <h1>Satış Paneli</h1>
-    <p>Ekibinle müşteri sohbetlerini tek ekrandan yönet.</p>
-    <label>E-posta</label>
-    <input id="authEmail" type="email" autocomplete="email" placeholder="ornek@gmail.com">
-    <label>Şifre</label>
-    <input id="authPassword" type="password" autocomplete="current-password" placeholder="••••••••">
-    <div class="loginActions">
-      <button id="loginBtn" class="primary">Giriş yap</button>
-      <button id="registerBtn" class="secondary">Kayıt ol</button>
+  <section id="authView" class="auth-view">
+    <div class="auth-card">
+      <div class="logo">S</div>
+
+      <div class="eyebrow">ITEMSATIŞ EKİP PANELİ</div>
+      <h1>Satış Paneli</h1>
+      <p class="auth-description">
+        Ekip hesabınla giriş yap. Henüz hesabın yoksa kayıt ol.
+      </p>
+
+      <div id="firebaseBootStatus" class="boot-status">
+        Firebase yükleniyor...
+      </div>
+
+      <label for="authEmail">E-posta</label>
+      <input
+        id="authEmail"
+        type="email"
+        autocomplete="email"
+        placeholder="ornek@gmail.com"
+        spellcheck="false"
+      >
+
+      <label for="authPassword">Panel şifresi</label>
+      <div class="password-row">
+        <input
+          id="authPassword"
+          type="password"
+          autocomplete="current-password"
+          placeholder="En az 6 karakter"
+        >
+        <button id="togglePasswordBtn" class="small-button" type="button">
+          Göster
+        </button>
+      </div>
+
+      <div class="auth-actions">
+        <button id="loginBtn" class="button primary" type="button">
+          Giriş yap
+        </button>
+        <button id="registerBtn" class="button secondary" type="button">
+          Kayıt ol
+        </button>
+      </div>
+
+      <div id="authMessage" class="form-message" aria-live="polite"></div>
+
+      <div class="auth-note">
+        Bu şifre Gmail şifren değil; yalnızca bu Firebase ekip paneli için oluşturduğun şifredir.
+        Sistem en fazla 5 ekip hesabına izin verir.
+      </div>
     </div>
-    <div id="authMessage" class="formMessage"></div>
-    <div class="limitNote">Maksimum 5 ekip hesabı.</div>
+  </section>
+
+  <div id="appView" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">S</div>
+
+        <div class="brand-copy">
+          <strong>Satış Paneli</strong>
+          <span id="bridgeStatus" class="status-offline">
+            <i></i>
+            ItemSatış bağlı değil
+          </span>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Müşteri ara"
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="list-header">
+        <span>Konuşmalar</span>
+        <b id="conversationCount">0</b>
+      </div>
+
+      <div id="conversationList" class="conversation-list">
+        <div class="sidebar-empty">
+          <strong>Konuşma yok</strong>
+          <span>Köprü bağlanınca sohbetler burada görünür.</span>
+        </div>
+      </div>
+
+      <div class="account-bar">
+        <div id="accountAvatar" class="account-avatar">B</div>
+
+        <div class="account-copy">
+          <strong id="accountName">Ekip hesabı</strong>
+          <span id="accountRole">Ekip üyesi</span>
+        </div>
+
+        <button id="logoutBtn" class="logout-button" type="button">
+          Çıkış
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="emptyState" class="empty-state">
+        <div class="empty-icon">↗</div>
+        <h2>Mesaj paneli hazır</h2>
+        <p>
+          ItemSatış köprüsü bağlandığında müşteri konuşmaları solda canlı olarak görünür.
+        </p>
+
+        <div class="connection-cards">
+          <div class="connection-card">
+            <span>Firebase</span>
+            <strong id="firebaseConnectionText">Bağlanıyor...</strong>
+          </div>
+
+          <div class="connection-card">
+            <span>Köprü</span>
+            <strong id="bridgeConnectionText">Bekleniyor</strong>
+          </div>
+        </div>
+      </section>
+
+      <section id="chatView" class="chat-view hidden">
+        <header class="chat-header">
+          <div class="chat-person">
+            <div id="chatAvatar" class="chat-avatar">?</div>
+            <div>
+              <h2 id="chatTitle">Konuşma</h2>
+              <span id="chatSubtitle">ItemSatış sohbeti</span>
+            </div>
+          </div>
+
+          <div id="chatLiveStatus" class="live-badge">
+            <i></i>
+            Canlı
+          </div>
+        </header>
+
+        <div id="messageList" class="message-list">
+          <div class="messages-empty">
+            Henüz mesaj yok.
+          </div>
+        </div>
+
+        <footer class="composer">
+          <div class="composer-field">
+            <textarea
+              id="replyInput"
+              rows="1"
+              maxlength="1500"
+              placeholder="Mesaj yaz..."
+            ></textarea>
+            <span id="charCount">0 / 1500</span>
+          </div>
+
+          <button id="sendBtn" class="send-button" type="button">
+            Gönder
+          </button>
+        </footer>
+      </section>
+    </main>
   </div>
-</section>
 
-<div id="appView" class="app hidden">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brandIcon">S</div>
-      <div><strong>Satış Paneli</strong><span id="bridgeStatus">● ItemSatış bağlı değil</span></div>
-    </div>
-    <div class="searchWrap"><input id="searchInput" type="search" placeholder="Müşteri ara"></div>
-    <div class="sideInfo"><span>Konuşmalar</span><b id="conversationCount">0</b></div>
-    <div id="conversationList" class="conversationList"></div>
-    <div class="accountBar">
-      <div class="avatar" id="accountAvatar">B</div>
-      <div class="accountText"><strong id="accountName">Ekip hesabı</strong><span id="accountRole">Üye</span></div>
-      <button id="logoutBtn" class="iconButton" title="Çıkış">↪</button>
-    </div>
-  </aside>
+  <div id="toast" class="toast hidden" aria-live="polite"></div>
 
-  <main class="main">
-    <section id="emptyState" class="emptyState">
-      <div class="emptyIcon">↗</div>
-      <h2>Mesaj paneli hazır</h2>
-      <p>Soldan bir konuşma seç. ItemSatış köprüsü bağlı olduğunda müşteri mesajları burada canlı görünür.</p>
-    </section>
-
-    <section id="chatView" class="chat hidden">
-      <header class="chatHeader">
-        <div><h2 id="chatTitle">Konuşma</h2><span>ItemSatış sohbeti</span></div>
-        <div class="chatState">Canlı</div>
-      </header>
-      <div id="messageList" class="messageList"></div>
-      <footer class="composer">
-        <textarea id="replyInput" rows="1" maxlength="1500" placeholder="Mesaj yaz..."></textarea>
-        <button id="sendBtn" class="sendButton">Gönder</button>
-      </footer>
-    </section>
-  </main>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import { getDatabase, ref, onValue, get, set, push } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAPHGoHTaI40XbuRhZveGNZGBT23wC5iSg",
-  authDomain: "satis-13335.firebaseapp.com",
-  databaseURL: "https://satis-13335-default-rtdb.firebaseio.com",
-  projectId: "satis-13335",
-  storageBucket: "satis-13335.firebasestorage.app",
-  messagingSenderId: "824447562050",
-  appId: "1:824447562050:web:ba76863cb1537d472658db",
-  measurementId: "G-EZ3SXBVGYJ"
-};
-
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
-const db = getDatabase(firebaseApp);
-const $ = id => document.getElementById(id);
-
-let conversations = {};
-let selectedId = null;
-let selectedConversation = null;
-let unsubscribeMessages = null;
-let currentUserProfile = null;
-
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function nameFromEmail(email){return String(email||'Ekip').split('@')[0]||'Ekip'}
-function avatarLetter(v){const s=String(v||'?').trim();return (s[0]||'?').toUpperCase()}
-function authError(e){
-  const code=String(e?.code||'');
-  if(code.includes('invalid-credential')) return 'E-posta veya şifre yanlış.';
-  if(code.includes('email-already-in-use')) return 'Bu e-posta zaten kayıtlı.';
-  if(code.includes('weak-password')) return 'Şifre en az 6 karakter olmalı.';
-  if(code.includes('invalid-email')) return 'Geçerli bir e-posta yaz.';
-  if(code.includes('operation-not-allowed')) return 'Firebase Email/Password giriş yöntemi açık değil.';
-  return e?.message||'İşlem başarısız.';
-}
-
-async function ensureMember(user){
-  const snap=await get(ref(db,'users'));
-  const users=snap.val()||{};
-  if(users[user.uid]){currentUserProfile=users[user.uid];return}
-  if(Object.keys(users).length>=5){
-    await signOut(auth);
-    throw new Error('Ekip dolu. Maksimum 5 hesap kayıt olabilir.');
-  }
-  const profile={email:user.email||'',role:Object.keys(users).length===0?'admin':'member',createdAt:Date.now()};
-  await set(ref(db,`users/${user.uid}`),profile);
-  currentUserProfile=profile;
-}
-
-document.getElementById('loginBtn').onclick=async()=>{
-  $('authMessage').textContent='';
-  try{
-    await signInWithEmailAndPassword(auth,$('authEmail').value.trim(),$('authPassword').value);
-  }catch(e){$('authMessage').textContent=authError(e)}
-};
-
-document.getElementById('registerBtn').onclick=async()=>{
-  $('authMessage').textContent='';
-  try{
-    const result=await createUserWithEmailAndPassword(auth,$('authEmail').value.trim(),$('authPassword').value);
-    await ensureMember(result.user);
-  }catch(e){$('authMessage').textContent=authError(e)}
-};
-
-$('authPassword').addEventListener('keydown',e=>{if(e.key==='Enter') $('loginBtn').click()});
-$('logoutBtn').onclick=()=>signOut(auth);
-
-onAuthStateChanged(auth,async user=>{
-  if(!user){
-    $('authView').classList.remove('hidden');
-    $('appView').classList.add('hidden');
-    return;
-  }
-  try{await ensureMember(user)}catch(e){$('authMessage').textContent=e.message||String(e);return}
-  $('authView').classList.add('hidden');
-  $('appView').classList.remove('hidden');
-
-  const display=nameFromEmail(user.email);
-  $('accountAvatar').textContent=avatarLetter(display);
-  $('accountName').textContent=display;
-  $('accountRole').textContent=currentUserProfile?.role==='admin'?'Yönetici':'Ekip üyesi';
-
-  onValue(ref(db,'bridge'),snap=>{
-    const b=snap.val()||{};
-    const online=b.online===true && Date.now()-Number(b.lastSeen||0)<20000;
-    $('bridgeStatus').textContent=online?'● ItemSatış bağlı':'● ItemSatış bağlı değil';
-    $('bridgeStatus').className=online?'online':'offline';
-  });
-
-  onValue(ref(db,'conversations'),snap=>{
-    conversations=snap.val()||{};
-    renderConversations();
-  });
-});
-
-function renderConversations(){
-  const list=$('conversationList');
-  const search=$('searchInput').value.trim().toLowerCase();
-  const entries=Object.entries(conversations)
-    .filter(([,v])=>String(v?.title||'').toLowerCase().includes(search))
-    .sort((a,b)=>Number(b[1]?.updatedAt||0)-Number(a[1]?.updatedAt||0));
-
-  $('conversationCount').textContent=entries.length;
-  list.innerHTML='';
-
-  if(!entries.length){
-    list.innerHTML='<div class="sideEmpty"><strong>Konuşma yok</strong><span>Köprü bağlanınca sohbetler burada görünür.</span></div>';
-    return;
-  }
-
-  for(const [id,v] of entries){
-    const title=v?.title||'Konuşma';
-    const row=document.createElement('div');
-    row.className='conv'+(id===selectedId?' active':'');
-    row.innerHTML=`<div class="convAvatar">${esc(avatarLetter(title))}</div><div class="convMain"><strong>${esc(title)}</strong><span>ItemSatış sohbeti</span></div><div class="convTime">${formatTime(v?.updatedAt)}</div>`;
-    row.onclick=()=>selectConversation(id,v);
-    list.appendChild(row);
-  }
-}
-$('searchInput').oninput=renderConversations;
-
-function formatTime(ts){
-  if(!ts)return '';
-  try{return new Date(ts).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}catch{return ''}
-}
-
-function selectConversation(id,v){
-  selectedId=id;selectedConversation=v;renderConversations();
-  $('emptyState').classList.add('hidden');$('chatView').classList.remove('hidden');
-  $('chatTitle').textContent=v?.title||'Konuşma';
-  if(unsubscribeMessages)unsubscribeMessages();
-  unsubscribeMessages=onValue(ref(db,`messages/${id}`),snap=>renderMessages(snap.val()||{}));
-}
-
-function renderMessages(data){
-  const list=$('messageList');list.innerHTML='';
-  const msgs=Object.values(data).filter(Boolean).sort((a,b)=>Number(a.ts||0)-Number(b.ts||0));
-  if(!msgs.length){
-    list.innerHTML='<div class="sideEmpty"><strong>Henüz mesaj bulunamadı</strong><span>Köprü okuyunca burada görünecek.</span></div>';
-    return;
-  }
-  for(const m of msgs){
-    const d=document.createElement('div');
-    const dir=m.direction==='out'?'out':'in';
-    d.className=`messageBubble ${dir}`;
-    d.innerHTML=`${esc(m.text||'')}<small>${dir==='out'?'Gönderilen':'Gelen'}</small>`;
-    list.appendChild(d);
-  }
-  list.scrollTop=list.scrollHeight;
-}
-
-async function sendReply(){
-  const text=$('replyInput').value.trim();
-  if(!text||!selectedId||!selectedConversation||!auth.currentUser)return;
-  $('sendBtn').disabled=true;
-  try{
-    const job=push(ref(db,'outbox'));
-    await set(job,{
-      convId:selectedId,
-      title:selectedConversation.title||'',
-      lookupTitle:selectedConversation.lookupTitle||selectedConversation.title||'',
-      url:selectedConversation.url||'',
-      text,status:'pending',createdAt:Date.now(),createdBy:auth.currentUser.uid
-    });
-    $('replyInput').value='';
-  }catch(e){alert('Mesaj kuyruğa eklenemedi: '+(e.message||e))}
-  finally{$('sendBtn').disabled=false}
-}
-$('sendBtn').onclick=sendReply;
-$('replyInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendReply()}});
-</script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
