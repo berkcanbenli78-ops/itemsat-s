@@ -4,30 +4,37 @@
     ".write": false,
 
     "users": {
-      ".read": "auth != null",
       "$uid": {
-        ".write": "auth != null && auth.uid === $uid && (data.exists() || root.child('users').numChildren() < 5)"
+        ".read": "auth !== null && auth.uid === $uid",
+
+        ".write": "auth !== null && auth.uid === $uid && (data.exists() || root.child('users').numChildren() < 5)",
+
+        ".validate": "newData.hasChildren(['email', 'role', 'createdAt']) && newData.child('email').isString() && newData.child('email').val() === auth.token.email && newData.child('createdAt').isNumber() && ((newData.child('role').val() === 'owner' && auth.token.email === 'berkcanbenli78@gmail.com') || newData.child('role').val() === 'member')",
+
+        "$other": {
+          ".validate": "$other === 'email' || $other === 'role' || $other === 'createdAt'"
+        }
       }
     },
 
     "bridge": {
-      ".read": "auth != null && root.child('users').child(auth.uid).exists()",
-      ".write": "auth != null && root.child('users').child(auth.uid).exists()"
+      ".read": "auth !== null && root.child('users').child(auth.uid).exists()",
+      ".write": "auth !== null && root.child('users').child(auth.uid).exists()"
     },
 
     "conversations": {
-      ".read": "auth != null && root.child('users').child(auth.uid).exists()",
-      ".write": "auth != null && root.child('users').child(auth.uid).exists()"
+      ".read": "auth !== null && root.child('users').child(auth.uid).exists()",
+      ".write": "auth !== null && root.child('users').child(auth.uid).exists()"
     },
 
     "messages": {
-      ".read": "auth != null && root.child('users').child(auth.uid).exists()",
-      ".write": "auth != null && root.child('users').child(auth.uid).exists()"
+      ".read": "auth !== null && root.child('users').child(auth.uid).exists()",
+      ".write": "auth !== null && root.child('users').child(auth.uid).exists()"
     },
 
     "outbox": {
-      ".read": "auth != null && root.child('users').child(auth.uid).exists()",
-      ".write": "auth != null && root.child('users').child(auth.uid).exists()"
+      ".read": "auth !== null && root.child('users').child(auth.uid).exists()",
+      ".write": "auth !== null && root.child('users').child(auth.uid).exists()"
     }
   }
 }
