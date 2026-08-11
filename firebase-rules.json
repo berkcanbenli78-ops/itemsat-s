@@ -3,73 +3,31 @@
     ".read": false,
     ".write": false,
 
-    "slots": {
-      ".read": "auth != null && (root.child('slots/1/uid').val() == auth.uid || root.child('slots/2/uid').val() == auth.uid || root.child('slots/3/uid').val() == auth.uid || root.child('slots/4/uid').val() == auth.uid || root.child('slots/5/uid').val() == auth.uid)",
-      "$slot": {
-        ".write": "auth != null && ($slot == '1' || $slot == '2' || $slot == '3' || $slot == '4' || $slot == '5') && (( !data.exists() && newData.exists() && newData.child('uid').val() == auth.uid && (($slot == '1' && newData.child('role').val() == 'admin') || ($slot != '1' && newData.child('role').val() == 'member')) && root.child('slots/1/uid').val() != auth.uid && root.child('slots/2/uid').val() != auth.uid && root.child('slots/3/uid').val() != auth.uid && root.child('slots/4/uid').val() != auth.uid && root.child('slots/5/uid').val() != auth.uid ) || ( data.exists() && !newData.exists() && ((data.child('uid').val() == auth.uid && !root.child('profiles').child(auth.uid).exists()) || (root.child('slots/1/uid').val() == auth.uid && $slot != '1')) ))",
-        ".validate": "!newData.exists() || (newData.hasChildren(['uid','role','createdAt']) && newData.child('uid').isString() && newData.child('uid').val().length > 10 && newData.child('role').isString() && newData.child('createdAt').isNumber() && newData.child('createdAt').val() <= now + 60000 && newData.child('createdAt').val() >= now - 600000)",
-        "uid": {
-          ".read": "auth != null",
-          ".validate": "newData.isString()"
-        },
-        "role": {
-          ".validate": "newData.val() == 'admin' || newData.val() == 'member'"
-        },
-        "createdAt": {
-          ".validate": "newData.isNumber()"
-        },
-        "$other": {
-          ".validate": false
-        }
-      }
-    },
-
-    "profiles": {
-      ".read": "auth != null && (root.child('slots/1/uid').val() == auth.uid || root.child('slots/2/uid').val() == auth.uid || root.child('slots/3/uid').val() == auth.uid || root.child('slots/4/uid').val() == auth.uid || root.child('slots/5/uid').val() == auth.uid)",
+    "users": {
+      ".read": "auth != null",
       "$uid": {
-        ".write": "auth != null && ((auth.uid == $uid && !data.exists() && newData.exists() && newData.child('email').val() == auth.token.email && ((newData.child('slot').val() == 1 && root.child('slots/1/uid').val() == auth.uid && newData.child('role').val() == 'admin') || (newData.child('slot').val() == 2 && root.child('slots/2/uid').val() == auth.uid && newData.child('role').val() == 'member') || (newData.child('slot').val() == 3 && root.child('slots/3/uid').val() == auth.uid && newData.child('role').val() == 'member') || (newData.child('slot').val() == 4 && root.child('slots/4/uid').val() == auth.uid && newData.child('role').val() == 'member') || (newData.child('slot').val() == 5 && root.child('slots/5/uid').val() == auth.uid && newData.child('role').val() == 'member'))) || (root.child('slots/1/uid').val() == auth.uid && $uid != auth.uid && !newData.exists()))",
-        ".validate": "!newData.exists() || (newData.hasChildren(['name','email','slot','role','createdAt']) && newData.child('name').isString() && newData.child('name').val().length >= 2 && newData.child('name').val().length <= 40 && newData.child('email').isString() && newData.child('email').val().length <= 160 && newData.child('slot').isNumber() && newData.child('slot').val() >= 1 && newData.child('slot').val() <= 5 && newData.child('createdAt').isNumber() && newData.child('createdAt').val() <= now + 60000 && newData.child('createdAt').val() >= now - 600000)",
-        "name": { ".validate": "newData.isString()" },
-        "email": { ".validate": "newData.isString()" },
-        "slot": { ".validate": "newData.isNumber()" },
-        "role": { ".validate": "newData.val() == 'admin' || newData.val() == 'member'" },
-        "createdAt": { ".validate": "newData.isNumber()" },
-        "$other": { ".validate": false }
+        ".write": "auth != null && auth.uid === $uid && (data.exists() || root.child('users').numChildren() < 5)"
       }
     },
 
     "bridge": {
-      ".read": "auth != null && (root.child('slots/1/uid').val() == auth.uid || root.child('slots/2/uid').val() == auth.uid || root.child('slots/3/uid').val() == auth.uid || root.child('slots/4/uid').val() == auth.uid || root.child('slots/5/uid').val() == auth.uid)",
-      ".write": false
+      ".read": "auth != null && root.child('users').child(auth.uid).exists()",
+      ".write": "auth != null && root.child('users').child(auth.uid).exists()"
     },
 
     "conversations": {
-      ".read": "auth != null && (root.child('slots/1/uid').val() == auth.uid || root.child('slots/2/uid').val() == auth.uid || root.child('slots/3/uid').val() == auth.uid || root.child('slots/4/uid').val() == auth.uid || root.child('slots/5/uid').val() == auth.uid)",
-      ".write": false,
-      ".indexOn": ["updatedAt"]
+      ".read": "auth != null && root.child('users').child(auth.uid).exists()",
+      ".write": "auth != null && root.child('users').child(auth.uid).exists()"
     },
 
     "messages": {
-      "$conversationId": {
-        ".read": "auth != null && (root.child('slots/1/uid').val() == auth.uid || root.child('slots/2/uid').val() == auth.uid || root.child('slots/3/uid').val() == auth.uid || root.child('slots/4/uid').val() == auth.uid || root.child('slots/5/uid').val() == auth.uid)",
-        ".write": false,
-        ".indexOn": ["createdAt"]
-      }
+      ".read": "auth != null && root.child('users').child(auth.uid).exists()",
+      ".write": "auth != null && root.child('users').child(auth.uid).exists()"
     },
 
     "outbox": {
-      "$messageId": {
-        ".read": "auth != null && (root.child('slots/1/uid').val() == auth.uid || root.child('slots/2/uid').val() == auth.uid || root.child('slots/3/uid').val() == auth.uid || root.child('slots/4/uid').val() == auth.uid || root.child('slots/5/uid').val() == auth.uid)",
-        ".write": "auth != null && !data.exists() && newData.exists() && (root.child('slots/1/uid').val() == auth.uid || root.child('slots/2/uid').val() == auth.uid || root.child('slots/3/uid').val() == auth.uid || root.child('slots/4/uid').val() == auth.uid || root.child('slots/5/uid').val() == auth.uid) && newData.child('authorUid').val() == auth.uid && newData.child('status').val() == 'queued'",
-        ".validate": "newData.hasChildren(['conversationId','text','authorUid','authorName','createdAt','status']) && newData.child('conversationId').isString() && newData.child('conversationId').val().length > 0 && newData.child('conversationId').val().length <= 160 && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 2000 && newData.child('authorUid').isString() && newData.child('authorName').isString() && newData.child('authorName').val().length <= 40 && newData.child('createdAt').isNumber() && newData.child('createdAt').val() <= now + 60000 && newData.child('createdAt').val() >= now - 600000 && newData.child('status').val() == 'queued'",
-        "conversationId": { ".validate": "newData.isString()" },
-        "text": { ".validate": "newData.isString()" },
-        "authorUid": { ".validate": "newData.isString()" },
-        "authorName": { ".validate": "newData.isString()" },
-        "createdAt": { ".validate": "newData.isNumber()" },
-        "status": { ".validate": "newData.val() == 'queued'" },
-        "$other": { ".validate": false }
-      }
+      ".read": "auth != null && root.child('users').child(auth.uid).exists()",
+      ".write": "auth != null && root.child('users').child(auth.uid).exists()"
     }
   }
 }
