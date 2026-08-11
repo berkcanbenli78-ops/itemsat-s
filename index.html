@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0b0d12" />
+  <title>Satış Mesaj Paneli</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <main id="authView" class="auth-shell">
+    <section class="auth-card">
+      <div class="brand-mark">S</div>
+      <div class="auth-heading">
+        <p class="eyebrow">ÖZEL EKİP PANELİ</p>
+        <h1>Satış Mesaj Paneli</h1>
+        <p>En fazla 5 ekip üyesi. İlk kayıt olan hesap yönetici olur.</p>
+      </div>
+
+      <div class="auth-tabs" role="tablist" aria-label="Giriş ve kayıt">
+        <button id="loginTab" class="auth-tab active" type="button">Giriş</button>
+        <button id="registerTab" class="auth-tab" type="button">Kayıt</button>
+      </div>
+
+      <form id="loginForm" class="auth-form" autocomplete="on">
+        <label>
+          <span>E-posta</span>
+          <input id="loginEmail" type="email" autocomplete="email" required placeholder="ornek@mail.com" />
+        </label>
+        <label>
+          <span>Şifre</span>
+          <input id="loginPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••" />
+        </label>
+        <button id="loginButton" class="primary-button" type="submit">Giriş yap</button>
+      </form>
+
+      <form id="registerForm" class="auth-form hidden" autocomplete="on">
+        <label>
+          <span>Görünen ad</span>
+          <input id="registerName" type="text" autocomplete="nickname" required minlength="2" maxlength="40" placeholder="Berkcan" />
+        </label>
+        <label>
+          <span>E-posta</span>
+          <input id="registerEmail" type="email" autocomplete="email" required placeholder="ornek@mail.com" />
+        </label>
+        <label>
+          <span>Şifre</span>
+          <input id="registerPassword" type="password" autocomplete="new-password" required minlength="6" placeholder="En az 6 karakter" />
+        </label>
+        <button id="registerButton" class="primary-button" type="submit">Ekip hesabı oluştur</button>
+        <p class="form-note">Siteyi paylaşmadan önce ilk hesabı sen oluştur. İlk slot yönetici hesabıdır.</p>
+      </form>
+    </section>
+  </main>
+
+  <main id="appView" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand-row">
+          <div class="brand-mark small">S</div>
+          <div>
+            <strong>Satış Paneli</strong>
+            <span id="bridgeBadge" class="status-badge offline">Bağlantı yok</span>
+          </div>
+        </div>
+
+        <label class="search-box" aria-label="Konuşmalarda ara">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>
+          <input id="conversationSearch" type="search" placeholder="Müşteri ara" />
+        </label>
+      </div>
+
+      <div id="conversationList" class="conversation-list">
+        <div class="empty-sidebar">
+          <strong>Konuşma yok</strong>
+          <span>ItemSatış bağlantısı veri gönderince burada görünecek.</span>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="profile-mini">
+          <div id="profileAvatar" class="avatar">?</div>
+          <div class="profile-copy">
+            <strong id="profileName">—</strong>
+            <span id="profileRole">Ekip üyesi</span>
+          </div>
+        </div>
+        <div class="footer-actions">
+          <button id="teamButton" class="icon-button hidden" type="button" title="Ekip üyeleri" aria-label="Ekip üyeleri">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m7-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.87m-2-12.26a4 4 0 0 1 0 7.75"/></svg>
+          </button>
+          <button id="logoutButton" class="icon-button" type="button" title="Çıkış" aria-label="Çıkış">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4m7 14 5-5-5-5m5 5H9"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="chat-panel">
+      <div id="chatEmpty" class="chat-empty">
+        <div class="empty-icon">↗</div>
+        <h2>Mesaj paneli hazır</h2>
+        <p>Soldan bir konuşma seç. ItemSatış bridge bağlandığında müşteri mesajları burada canlı görünür.</p>
+      </div>
+
+      <div id="chatContent" class="chat-content hidden">
+        <header class="chat-header">
+          <div>
+            <strong id="chatCustomer">Müşteri</strong>
+            <span id="chatMeta">ItemSatış konuşması</span>
+          </div>
+          <span id="chatStatus" class="chat-status">Canlı</span>
+        </header>
+
+        <div id="messages" class="messages" aria-live="polite"></div>
+
+        <form id="replyForm" class="composer">
+          <textarea id="replyInput" rows="1" maxlength="2000" placeholder="Mesaj yaz..." required></textarea>
+          <button id="sendButton" class="send-button" type="submit" title="Gönder" aria-label="Gönder">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></svg>
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="teamDialog" class="team-dialog">
+    <div class="dialog-head">
+      <div>
+        <p class="eyebrow">YÖNETİCİ</p>
+        <h2>Ekip üyeleri</h2>
+      </div>
+      <button id="closeTeamDialog" class="icon-button" type="button" aria-label="Kapat">×</button>
+    </div>
+    <div id="teamSlots" class="team-slots"></div>
+    <p class="dialog-note">Bir üyeyi kaldırmak slotu boşaltır. Aynı e-posta tekrar kullanılacaksa Firebase Authentication içinden eski kullanıcıyı da silmen gerekir.</p>
+  </dialog>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
